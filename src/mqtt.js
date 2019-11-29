@@ -1,4 +1,5 @@
 import mqtt from 'mqtt';
+import statistics from './statistics';
 
 export default () => {
   const { MQTT_BROKER_URI, MQTT_BROKER_USERNAME, MQTT_BROKER_PASSWORD } = process.env;
@@ -19,7 +20,12 @@ export default () => {
   client.subscribe('app/+/+/+');
 
   client.on('message', (topic, payload) => {
-    const [, userID, greenhouseID, type] = topic.split(/\//);
-    console.log(type, userID, greenhouseID, payload.toString('utf-8'));
+    const [, username, greenhouseName, type] = topic.split(/\//);
+    try {
+      const value = parseFloat(payload.toString('utf-8'));
+      statistics.create(username, greenhouseName, type, value);
+    } catch (error) {
+      // JUST PASS
+    }
   });
 };
