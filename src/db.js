@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import { Pool } from 'pg';
 
-export default () => {
-  mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+const pool = new Pool();
+
+export default {
+  end: () => pool.end(),
+  query: (text, params) => pool.query(text, params)
 };

@@ -16,12 +16,10 @@ export default () => {
   client.on('connect', () => {
     client.publish('app/status', 'Client Connected');
   });
-
-  client.subscribe('app/+/+/temperature');
-  client.subscribe('app/+/+/brightness');
+  client.subscribe('app/+/+/+');
 
   client.on('message', (topic, payload) => {
-    const [, clientID, clusterID, type] = topic.split(/\//);
-    console.log(type, clientID, clusterID, payload.toString('utf-8'));
+    const [, userID, greenhouseID, type] = topic.split(/\//);
+    console.log(type, userID, greenhouseID, payload.toString('utf-8'));
   });
 };
