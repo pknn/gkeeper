@@ -25,7 +25,7 @@ export default () => {
       const value = parseFloat(payload.toString('utf-8'));
       statistics.create(username, greenhouseName, type, value);
     } catch (error) {
-      // JUST PASS
+      // DO NOTHING
     }
   });
 };
