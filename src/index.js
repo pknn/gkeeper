@@ -2,6 +2,8 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
+import mongooseInit from './db';
+import mqttInit from './mqtt';
 
 dotenv.config();
 
@@ -13,4 +15,6 @@ app
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }));
 
+mongooseInit();
+mqttInit();
 app.listen(PORT, HOST);
