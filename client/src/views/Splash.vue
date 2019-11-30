@@ -1,8 +1,7 @@
 <template>
-  <div class="flex flex-col justify-center items-center bg-white">
+  <div class="splash" :class="{ wooshIn: beginWooshIn }">
     <img
       class="logo"
-      :class="{ wooshIn: beginWooshIn, wooshOut: beginWooshOut }"
       src="https://image.flaticon.com/icons/png/512/628/628283.png"
       alt="logo"
     />
@@ -13,18 +12,18 @@
 </template>
 
 <style lang="postcss" scoped>
+.splash {
+  @apply flex flex-col justify-center items-center bg-white h-screen w-screen;
+  transition: opacity 800ms ease;
+  &.wooshIn {
+    opacity: 0;
+  }
+}
 .logo {
   @apply p-4 rounded-full;
-  transition: transform 800ms ease-out;
   float: left;
   height: 300px;
   overflow: hidden;
-  &.wooshIn {
-    transform: scale(6);
-  }
-  &.wooshOut {
-    transform: scale(0.01);
-  }
 }
 
 .brand-name {
@@ -49,19 +48,15 @@
 export default {
   name: "splash",
   data: () => ({
-    beginWooshIn: false,
-    beginWooshOut: false
+    beginWooshIn: false
   }),
   mounted() {
     setTimeout(() => {
       this.beginWooshIn = true;
     }, 1000);
     setTimeout(() => {
-      this.beginWooshOut = true;
-    }, 2700);
-    setTimeout(() => {
-      this.$router.push({ name: "home" });
-    }, 3500);
+      this.$router.push({ name: "login" });
+    }, 2300);
   }
 };
 </script>
