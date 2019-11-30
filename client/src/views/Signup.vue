@@ -52,10 +52,12 @@
         </div>
       </div>
       <div class="absolute inset-x-0 bottom-0 mb-8 text-center">
-        <p class="text-sm">
-          Don't have an account?
-          <a class="font-bold text-app-accent">Sign up</a>
-        </p>
+        <span class="text-sm">
+          Already have an account?
+        </span>
+        <router-link :to="{ name: 'login' }" class="font-bold text-app-accent">
+          Sign In
+        </router-link>
       </div>
     </div>
   </div>
