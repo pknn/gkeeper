@@ -16,6 +16,9 @@ export default {
   getUserByUsername: async username => {
     return repository.getByUsername(username);
   },
+  getUserByEmail: async email => {
+    return repository.getByEmail(email);
+  },
   getGreenhousesOf: async id => {
     return repository.getGreenhousesOf(id);
   },

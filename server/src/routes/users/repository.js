@@ -9,7 +9,11 @@ export default {
     return result.rows;
   },
   getByUsername: async username => {
-    const result = await db.query('SELECT * FROM users WHERE username=$1', [username]);
+    const result = await db.query('SELECT username FROM users WHERE username=$1', [username]);
+    return result.rows[0];
+  },
+  getByEmail: async email => {
+    const result = await db.query('SELECT email FROM users WHERE email=$1', [email]);
     return result.rows[0];
   },
   get: async id => {

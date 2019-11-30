@@ -2,10 +2,17 @@ import service from './service';
 
 export default {
   getUsers: async (request, response) => {
-    const { username } = request.query;
+    const { username, email } = request.query;
     try {
       if (username) {
         const user = await service.getUserByUsername(username);
+        if (!user) {
+          response.sendStatus(404);
+        } else {
+          response.json(user);
+        }
+      } else if (email) {
+        const user = await service.getUserByEmail(email);
         if (!user) {
           response.sendStatus(404);
         } else {

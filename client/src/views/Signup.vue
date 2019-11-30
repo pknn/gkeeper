@@ -1,33 +1,53 @@
 <template>
-  <div class="wrapper" :class="{ wooshIn: beginWoosh }">
+  <div class="wrapper">
     <div class="logo" />
     <div class="absolute inset-0 m-auto flex justify-center items-center">
       <div class="w-1/3">
         <h1 class="text-4xl text-gray-800 font-bold">Create Account</h1>
         <div class="mt-16">
-          <div class="input-section invalid">
+          <div class="input-section" :class="{ invalid: !isUsernameUnique }">
             <label class="input-label" for="username">username</label>
-            <p class="input-warn">Username has been used.</p>
+            <p v-show="!isUsernameUnique" class="input-warn">
+              This username has been used.
+            </p>
             <div class="input-icon">
               <img src="@/assets/icon/avatar.png" />
             </div>
-            <input class="input-field" type="email" />
+            <input
+              class="input-field"
+              type="text"
+              v-model="username"
+              v-debounce:300ms="checkUsername"
+            />
           </div>
-          <div class="input-section">
+          <div class="input-section" :class="{ invalid: !isEmailUnique }">
             <label class="input-label" for="email">email</label>
+            <p v-show="!isEmailUnique" class="input-warn">
+              This email has been used.
+            </p>
             <div class="input-icon">
               <img src="@/assets/icon/envelope.png" />
             </div>
-            <input class="input-field" type="email" />
+            <input
+              class="input-field"
+              type="email"
+              v-model="email"
+              v-debounce:300ms="checkEmail"
+            />
           </div>
-          <div class="input-section">
+          <div class="input-section" :class="{ invalid: !isPasswordValid }">
             <label class="input-label" for="password">password</label>
+            <p v-show="!isPasswordValid" class="input-warn">
+              Password must be more than 8 characters.
+            </p>
             <div class="input-icon">
               <img src="@/assets/icon/padlock.png" />
             </div>
             <input
               class="input-field"
               :type="isShowPassword ? 'text' : 'password'"
+              v-model="password"
+              v-debounce:300ms="checkPassword"
             />
             <a class="input-addon" @click="toggleShowPassword">
               <img
@@ -44,6 +64,7 @@
           </div>
           <div class="input-section border-none justify-center">
             <button
+              @click="signUp"
               class="bg-app-accent hover:bg-app-main px-8 py-2 rounded shadow-md hover:shadow"
             >
               Sign Up
@@ -79,33 +100,61 @@
   top: 0;
   opacity: 30%;
 }
-
-.button {
-  @apply text-lg px-10 py-3 m-2 font-bold rounded-full shadow-md;
-  &.primary {
-    @apply bg-app-accent text-gray-100;
-  }
-  &.secondary {
-    @apply bg-gray-100;
-  }
-}
 </style>
 
 <script>
+import axios from "axios";
 export default {
   name: "signup",
   data: () => ({
-    beginWoosh: false,
-    isShowPassword: false
+    isShowPassword: false,
+    username: "",
+    email: "",
+    password: "",
+    isUsernameUnique: true,
+    isEmailUnique: true,
+    isPasswordValid: true,
+    signingUp: false
   }),
-  mounted() {
-    setTimeout(() => {
-      this.beginWoosh = true;
-    }, 800);
-  },
   methods: {
     toggleShowPassword() {
       this.isShowPassword = !this.isShowPassword;
+    },
+    async checkUsername() {
+      if (!this.username) return;
+      try {
+        await axios.get(`/users?username=${this.username}`);
+        this.isUsernameUnique = false;
+      } catch (error) {
+        this.isUsernameUnique = true;
+      }
+    },
+    async checkEmail() {
+      if (!this.email) return;
+      try {
+        await axios.get(`/users?email=${this.email}`);
+        this.isEmailUnique = false;
+      } catch (error) {
+        this.isEmailUnique = true;
+      }
+    },
+    checkPassword() {
+      this.isPasswordValid = this.password.length >= 8;
+    },
+    async signUp() {
+      if (this.isUsernameUnique && this.isEmailUnique && this.isPasswordValid) {
+        this.signingUp = true;
+        try {
+          await axios.post("/auth/signup", {
+            username: this.username,
+            email: this.email,
+            password: this.password
+          });
+          console.log("Signed Up");
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
   }
 };

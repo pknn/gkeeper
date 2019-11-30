@@ -58,16 +58,6 @@
   top: 0;
   opacity: 30%;
 }
-
-.button {
-  @apply text-lg px-10 py-3 m-2 font-bold rounded-full shadow-md;
-  &.primary {
-    @apply bg-app-accent text-gray-100;
-  }
-  &.secondary {
-    @apply bg-gray-100;
-  }
-}
 </style>
 
 <script>
