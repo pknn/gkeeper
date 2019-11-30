@@ -48,6 +48,11 @@ body {
   &.invalid {
     @apply border-red-400;
   }
+  &.no-focus {
+    &:focus-within {
+      @apply shadow-none;
+    }
+  }
   &:focus-within {
     @apply shadow-xl border-transparent;
   }

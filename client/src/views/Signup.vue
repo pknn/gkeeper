@@ -62,10 +62,10 @@
               />
             </a>
           </div>
-          <div class="input-section border-none justify-center">
+          <div class="input-section no-focus border-none justify-center">
             <button
               @click="signUp"
-              class="bg-app-accent hover:bg-app-main px-8 py-2 rounded shadow-md hover:shadow"
+              class="bg-app-accent hover:bg-app-main px-8 py-2 rounded shadow-md hover:shadow outline-none"
             >
               Sign Up
             </button>
@@ -116,6 +116,18 @@ export default {
     isPasswordValid: true,
     signingUp: false
   }),
+  computed: {
+    valid() {
+      return (
+        this.username &&
+        this.email &&
+        this.password &&
+        this.isUsernameUnique &&
+        this.isEmailUnique &&
+        this.isPasswordValid
+      );
+    }
+  },
   methods: {
     toggleShowPassword() {
       this.isShowPassword = !this.isShowPassword;
@@ -142,7 +154,7 @@ export default {
       this.isPasswordValid = this.password.length >= 8;
     },
     async signUp() {
-      if (this.isUsernameUnique && this.isEmailUnique && this.isPasswordValid) {
+      if (this.valid) {
         this.signingUp = true;
         try {
           await axios.post("/auth/signup", {

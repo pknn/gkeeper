@@ -7,23 +7,41 @@
         <p>Please Login to Continue</p>
         <div class="mt-16">
           <div class="input-section">
-            <label class="input-label" for="email">email</label>
+            <label class="input-label" for="username">username</label>
             <div class="input-icon">
-              <img src="@/assets/icon/envelope.png" />
+              <img src="@/assets/icon/avatar.png" />
             </div>
-            <input class="input-field" type="email" />
+            <input class="input-field" type="text" v-model="username" />
           </div>
           <div class="input-section">
             <label class="input-label" for="password">password</label>
             <div class="input-icon">
               <img src="@/assets/icon/padlock.png" />
             </div>
-            <input class="input-field" type="password" />
-            <a class="input-addon">Forgot</a>
+            <input
+              class="input-field"
+              :type="isShowPassword ? 'text' : 'password'"
+              v-model="password"
+            />
+            <a class="input-addon">
+              <a class="input-addon" @click="toggleShowPassword">
+                <img
+                  v-if="isShowPassword"
+                  class="input-addon-icon"
+                  src="@/assets/icon/hide.png"
+                />
+                <img
+                  v-else
+                  class="input-addon-icon"
+                  src="@/assets/icon/eye.png"
+                />
+              </a>
+            </a>
           </div>
-          <div class="input-section border-none justify-center">
+          <div class="input-section no-focus border-none justify-center">
             <button
-              class="bg-app-accent hover:bg-app-main px-8 py-2 rounded shadow-md hover:shadow"
+              class="bg-app-accent hover:bg-app-main px-8 py-2 rounded shadow-md hover:shadow outline-none"
+              @click="signIn"
             >
               Sign In
             </button>
@@ -61,7 +79,34 @@
 </style>
 
 <script>
+import axios from "axios";
 export default {
-  name: "login"
+  name: "login",
+  data: () => ({
+    username: "",
+    password: "",
+    isShowPassword: false,
+    isLoggingIn: false
+  }),
+  methods: {
+    toggleShowPassword() {
+      this.isShowPassword = !this.isShowPassword;
+    },
+    async signIn() {
+      if (this.username && this.password) {
+        this.isLoggingIn = true;
+        try {
+          await axios.post("/auth/login", {
+            username: this.username,
+            password: this.password
+          });
+        } catch (error) {
+          console.error(error);
+        } finally {
+          this.isLoggingIn = false;
+        }
+      }
+    }
+  }
 };
 </script>
