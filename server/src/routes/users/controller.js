@@ -1,19 +1,6 @@
 import service from './service';
 
 export default {
-  newUser: async (request, response) => {
-    const { username } = request.body;
-    if (!username) {
-      response.sendStatus(400);
-    } else {
-      try {
-        await service.createUser(username);
-        response.sendStatus(201);
-      } catch (error) {
-        response.status(400).send(error);
-      }
-    }
-  },
   getUsers: async (request, response) => {
     const { username } = request.query;
     try {

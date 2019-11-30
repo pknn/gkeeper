@@ -3,10 +3,7 @@ import controller from './controller';
 
 const router = Router();
 
-router
-  .route('/')
-  .get(controller.getUsers)
-  .post(controller.newUser);
+router.route('/').get(controller.getUsers);
 
 router
   .route('/:id')
