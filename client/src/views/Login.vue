@@ -100,6 +100,7 @@ export default {
             username: this.username,
             password: this.password
           });
+          this.$router.push({ name: "dashboard" });
         } catch (error) {
           console.error(error);
         } finally {
