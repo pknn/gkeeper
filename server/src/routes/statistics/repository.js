@@ -23,6 +23,18 @@ export default {
       value
     ]);
   },
+  getMinutely: async (greenhouseID, type) => {
+    const query = [
+      'SELECT statistics.value as average_value, collected_at as dt',
+      'FROM statistics',
+      'WHERE greenhouse_id=$1',
+      'AND type=$2',
+      'ORDER BY collected_at DESC',
+      'LIMIT 10'
+    ].join(' ');
+    const result = await db.query(query, [greenhouseID, type]);
+    return result.rows;
+  },
   getHourly: async (greenhouseID, type) => {
     const query = [
       "SELECT AVG(statistics.value) as average_value, date_trunc('hour', collected_at) as dt",

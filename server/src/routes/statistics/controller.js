@@ -21,7 +21,8 @@ export default {
         const result = await repository.getDaily(id, type);
         response.json(result);
       } else {
-        response.sendStatus(400);
+        const result = await repository.getMinutely(id, type);
+        response.json(result);
       }
     } catch (error) {
       response.status(400).send();

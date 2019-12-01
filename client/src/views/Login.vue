@@ -84,8 +84,7 @@ export default {
   data: () => ({
     username: "",
     password: "",
-    isShowPassword: false,
-    isLoggingIn: false
+    isShowPassword: false
   }),
   methods: {
     toggleShowPassword() {
@@ -93,7 +92,7 @@ export default {
     },
     signIn() {
       if (this.username && this.password) {
-        this.isLoggingIn = true;
+        this.$emit("loading");
         this.$store
           .dispatch("login", {
             username: this.username,
@@ -102,14 +101,16 @@ export default {
           .then(() => {
             this.$router.push({ name: "dashboard" });
           })
-          .catch(error => {
-            console.error(error);
+          .catch(() => {
+            this.$emit("loaded");
+            this.$emit("toast", false, "Login failed. Please try again");
           })
-          .finally(() => {
-            this.isLoggingIn = false;
-          });
+          .finally(() => {});
       }
     }
+  },
+  mounted() {
+    this.$emit("loaded");
   }
 };
 </script>

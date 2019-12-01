@@ -41,6 +41,7 @@
 export default {
   name: "splash",
   mounted() {
+    this.$emit("loaded");
     setTimeout(() => {
       this.$router.push({ name: "login" });
     }, 2300);

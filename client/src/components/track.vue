@@ -1,42 +1,54 @@
 <template>
-  <div class="bg-white p-3 m-1 shadow-md w-1/2">
-    <h1 class="uppercase text-app-main text-xl">Brightness</h1>
-    <h2>Brightness: {{ Math.round(currentValue * 100) / 100 }}</h2>
-    <div class="tabs flex justify-center items-center">
-      <div
-        class="tab rounded-l"
-        :class="{ active: tab === 0 }"
-        @click="tabChange(0)"
+  <div class="bg-white p-3 m-1 shadow-md w-1/3">
+    <h1 class="uppercase text-app-main text-xl">Tracking</h1>
+    <div class="tracking flex mb-4">
+      <div class="t-input-section">
+        <label class="t-input-label" for="growth">Growth (cm)</label>
+        <input class="t-input-field" type="number" v-model="growth" />
+      </div>
+      <button
+        class="uppercase font-bold text-sm py-3 px-8 bg-app-main shadow-xl hover:bg-app-accent"
+        @click="track"
       >
-        Minutely
-      </div>
-      <div class="tab" :class="{ active: tab === 1 }" @click="tabChange(1)">
-        Hourly
-      </div>
-      <div
-        class="tab rounded-r"
-        :class="{ active: tab === 2 }"
-        @click="tabChange(2)"
-      >
-        Daily
-      </div>
+        Track
+      </button>
     </div>
-    <div class="h-64">
+    <div>
       <chart
         v-if="loaded"
         :chart-data="statistics"
         :options="chartOptions"
-        :height="256"
+        :height="200"
       />
     </div>
   </div>
 </template>
 
 <style lang="postcss" scoped>
-.tab {
-  @apply border border-app-accent text-sm px-6 py-1 cursor-pointer;
-  &.active {
-    @apply bg-app-accent;
+.t-input-section {
+  @apply flex flex-wrap p-2 mt-2 items-center shadow-xl flex-1 flex-grow;
+  &.invalid {
+    @apply border-red-400;
+  }
+  &.no-focus {
+    &:focus-within {
+      @apply shadow-none;
+    }
+  }
+  &:focus-within {
+    @apply shadow-xl border-transparent;
+  }
+  .t-input-label {
+    @apply text-xs uppercase font-bold text-gray-700;
+    flex-basis: 100%;
+  }
+  .t-input-warn {
+    @apply text-xs text-red-400 ml-12;
+    flex-basis: 100%;
+  }
+
+  .t-input-field {
+    @apply p-2 outline-none flex-grow bg-transparent;
   }
 }
 </style>
@@ -45,21 +57,21 @@
 import axios from "axios";
 import chart from "@/components/chart.vue";
 export default {
-  name: "brightness",
+  name: "tracking",
+  components: { chart },
   props: {
     id: {
       type: Number,
       required: true
     }
   },
-  components: { chart },
   data: () => ({
     currentValue: 0,
+    growth: 0,
     statistics: [],
     tab: 0,
-    interval: ["minutely", "hourly", "daily"],
     chartOptions: {
-      label: "Brightness",
+      label: "Growth",
       xAxisID: "dt",
       yAxisID: "average_value",
       maintainAspectRatio: false,
@@ -101,38 +113,36 @@ export default {
     loaded: false
   }),
   mounted() {
-    axios
-      .get(`/statistics/latest?id=${this.id}&type=brightness`)
-      .then(response => {
-        this.currentValue = response.data.value;
-      });
     this.fetchData();
   },
   methods: {
-    tabChange(index) {
-      this.tab = index;
-      this.fetchData();
+    async track() {
+      if (this.growth < 0) {
+        this.growth = 0;
+      } else {
+        await axios
+          .post("/statistics", {
+            type: "growth",
+            value: this.growth,
+            greenhouseID: this.id
+          })
+          .then(() => {
+            this.fetchData();
+          })
+          .catch(() => {});
+      }
     },
     fetchData() {
       axios
-        .get(
-          `/statistics?id=${this.id}&type=brightness&dt=${
-            this.interval[this.tab]
-          }`
-        )
+        .get(`/statistics?id=${this.id}&type=growth&dt=daily`)
         .then(response => {
           const { data } = response;
+
           this.statistics = {
-            labels: data.map(d => {
-              if (this.tab === 2) {
-                return new Date(d.dt).toLocaleDateString("en-US");
-              } else {
-                return new Date(d.dt).toLocaleTimeString("en-US");
-              }
-            }),
+            labels: data.map(d => new Date(d.dt).toLocaleDateString("en-US")),
             datasets: [
               {
-                label: "Brightness",
+                label: "Growth",
                 data: data.map(d => d.average_value),
                 borderColor: "#80b6f4",
                 pointBorderColor: "#80b6f4",

@@ -8,14 +8,17 @@
         :class="{ active: tab === 0 }"
         @click="tabChange(0)"
       >
-        Daily
+        Minutely
+      </div>
+      <div class="tab" :class="{ active: tab === 1 }" @click="tabChange(1)">
+        Hourly
       </div>
       <div
         class="tab rounded-r"
-        :class="{ active: tab === 1 }"
-        @click="tabChange(1)"
+        :class="{ active: tab === 2 }"
+        @click="tabChange(2)"
       >
-        Hourly
+        Daily
       </div>
     </div>
     <div class="h-64">
@@ -54,6 +57,7 @@ export default {
     currentTemp: 0,
     statistics: [],
     tab: 0,
+    interval: ["minutely", "hourly", "daily"],
     chartOptions: {
       label: "Temperature",
       xAxisID: "dt",
@@ -113,15 +117,14 @@ export default {
       axios
         .get(
           `/statistics?id=${this.id}&type=temperature&dt=${
-            this.tab === 0 ? "daily" : "hourly"
+            this.interval[this.tab]
           }`
         )
         .then(response => {
           const { data } = response;
-
           this.statistics = {
             labels: data.map(d => {
-              if (this.tab === 0) {
+              if (this.tab === 2) {
                 return new Date(d.dt).toLocaleDateString("en-US");
               } else {
                 return new Date(d.dt).toLocaleTimeString("en-US");

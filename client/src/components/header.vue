@@ -16,8 +16,14 @@
         />
       </div>
       <button
+        @click="$router.push({ name: 'create' })"
+        class="px-8 py-2 bg-app-main rounded hover:bg-app-accent shadow-md text-gray-100"
+      >
+        New Greenhouse
+      </button>
+      <button
         @click="logout"
-        class="px-8 py-2 bg-app-main rounded shadow-md hover:shadow"
+        class="px-8 py-2 text-red-400 rounded hover:text-red-600"
       >
         Logout
       </button>
@@ -31,14 +37,12 @@ import axios from "axios";
 export default {
   name: "dashHeader",
   data: () => ({
-    currentWeatherInfo: null,
-    isLoading: false
+    currentWeatherInfo: null
   }),
   created() {
     window.navigator.geolocation.getCurrentPosition(
       data => {
         const { latitude, longitude } = data.coords;
-        this.isLoading = true;
         axios
           .get(`/weather/current?latitude=${latitude}&longitude=${longitude}`)
           .then(response => {
@@ -56,6 +60,7 @@ export default {
   },
   methods: {
     logout() {
+      this.$emit("loading");
       this.$store.dispatch("logout");
       setTimeout(() => {
         this.$router.push("/");

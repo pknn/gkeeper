@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-3 m-1 shadow-md">
+  <div class="bg-white p-3 m-1 shadow-md w-2/3">
     <h1 class="uppercase text-app-main text-xl">General Information</h1>
     <div v-if="loaded" class="flex">
       <img class="w-64 h-64 mr-4 my-4 shadow-md" :src="imageURL" :alt="plant" />

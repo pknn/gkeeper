@@ -10,6 +10,8 @@ Vue.use(vueDebounce, {
   listenTo: "input"
 });
 
+Vue.prototype.$isLoading = false;
+
 new Vue({
   router,
   store,

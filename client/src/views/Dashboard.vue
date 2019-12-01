@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full bg-gray-200 flex flex-col">
-    <dash-header />
+    <dash-header @loading="$emit('loading')" />
     <div class="content flex w-full h-full p-4">
       <div
         v-if="greenhousesCount <= 0"
@@ -30,7 +30,8 @@
             </button>
           </div>
         </div>
-        <div>
+        <div class="flex">
+          <tracking v-if="greenhousesCount >= 0" :id="greenhouse(index).id" />
           <fact v-if="greenhousesCount >= 0" :plant="greenhouse(index).plant" />
         </div>
         <div v-if="greenhousesCount >= 0" class="statistics flex">
@@ -48,16 +49,17 @@ import dashHeader from "@/components/header.vue";
 import temperature from "@/components/temperature.vue";
 import brightness from "@/components/brightness.vue";
 import fact from "@/components/fact.vue";
+import tracking from "@/components/track.vue";
 export default {
   name: "dashboard",
   components: {
     dashHeader,
     temperature,
     brightness,
-    fact
+    fact,
+    tracking
   },
   data: () => ({
-    loading: false,
     index: 0
   }),
   computed: {
@@ -72,9 +74,8 @@ export default {
     ...mapActions(["fetchGreenhouse"])
   },
   created() {
-    this.loading = true;
     this.fetchGreenhouse().then(() => {
-      this.loading = false;
+      this.$emit("loaded");
     });
   }
 };

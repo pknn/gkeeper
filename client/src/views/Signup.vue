@@ -155,7 +155,7 @@ export default {
     },
     signUp() {
       if (this.valid) {
-        this.signingUp = true;
+        this.$emit("loading");
         this.$store
           .dispatch("register", {
             username: this.username,
@@ -163,11 +163,16 @@ export default {
             password: this.password
           })
           .then(() => {
-            this.signingUp = false;
+            this.$emit("toast", true, "Registration Success.");
             this.$router.push({ name: "login" });
           })
-          .catch(error => {
-            console.error(error);
+          .catch(() => {
+            this.$emit("loaded");
+            this.$emit(
+              "toast",
+              false,
+              "Registration failed. Please try again."
+            );
           });
       }
     }

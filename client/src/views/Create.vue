@@ -66,10 +66,28 @@ export default {
   },
   methods: {
     async create() {
-      await this.$store.dispatch("createGreenhouse", {
-        name: this.name,
-        plant: this.plant
-      });
+      if (!this.isUnique) {
+        this.$emit(
+          "toast",
+          false,
+          `Cannot create Greenhouse with name ${this.name}`
+        );
+        return;
+      }
+      this.$emit("loading");
+      try {
+        await this.$store.dispatch("createGreenhouse", {
+          name: this.name,
+          plant: this.plant
+        });
+        this.$emit("toast", true, "Greenhouse Creation success.");
+      } catch (error) {
+        this.$emit(
+          "toast",
+          false,
+          "Greenhouse Creation failed. Please try again."
+        );
+      }
       await this.$store.dispatch("fetchGreenhouse");
       this.$router.push({ name: "dashboard" });
     }
