@@ -20,7 +20,7 @@ export default new Vuex.Store({
   actions: {
     async login({ commit }, { username, password }) {
       try {
-        const response = await axios.post("/auth/login", {
+        const response = await axios.post("/api/auth/login", {
           username,
           password
         });
@@ -31,7 +31,7 @@ export default new Vuex.Store({
     },
     async register(_, { username, email, password }) {
       try {
-        await axios.post("/auth/signup", {
+        await axios.post("/api/auth/signup", {
           username,
           email,
           password
@@ -45,12 +45,14 @@ export default new Vuex.Store({
       commit("setGreenhouses", []);
     },
     async fetchGreenhouse({ state, commit }) {
-      const response = await axios.get(`/users/${state.user.id}/greenhouses`);
+      const response = await axios.get(
+        `/api/users/${state.user.id}/greenhouses`
+      );
       commit("setGreenhouses", response.data);
     },
     async createGreenhouse({ state }, { name, plant }) {
       try {
-        await axios.post(`/users/${state.user.id}/greenhouses`, {
+        await axios.post(`/api/users/${state.user.id}/greenhouses`, {
           name,
           plant
         });

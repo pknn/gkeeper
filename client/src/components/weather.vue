@@ -29,7 +29,7 @@ export default {
         const { latitude, longitude } = data.coords;
         this.isLoading = true;
         axios
-          .get(`/weather/current?latitude=${latitude}&longitude=${longitude}`)
+          .get(`/api/weather/current?latitude=${latitude}&longitude=${longitude}`)
           .then(response => {
             const { data } = response;
             this.currentWeatherInfo = {

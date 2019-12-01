@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full bg-gray-200 flex flex-col">
-    <dash-header @loading="$emit('loading')" />
+    <dash-header @loading="$emit('loading')" @toast="toast" />
     <div class="content flex w-full h-full p-4">
       <div
         v-if="greenhousesCount <= 0"
@@ -19,24 +19,30 @@
             </p>
           </div>
           <div class="flex justify-center items-center">
-            <button @click="change(-1)" class="text-sm text-gray-600">
+            <button
+              @click="change(-1)"
+              class="text-sm text-gray-600 no-outline"
+            >
               Prev
             </button>
             <h1 class="mx-4 text-app-main">
-              {{ greenhouse(index).name.toUpperCase() }}
+              {{ greenhouses[index].name.toUpperCase() }}
             </h1>
-            <button @click="change(1)" class="text-sm text-gray-600">
+            <button @click="change(1)" class="text-sm text-gray-600 no-outline">
               Next
             </button>
           </div>
         </div>
         <div class="flex">
-          <tracking v-if="greenhousesCount >= 0" :id="greenhouse(index).id" />
-          <fact v-if="greenhousesCount >= 0" :plant="greenhouse(index).plant" />
+          <tracking v-if="greenhousesCount >= 0" :id="greenhouses[index].id" />
+          <fact
+            v-if="greenhousesCount >= 0"
+            :plant="greenhouses[index].plant"
+          />
         </div>
         <div v-if="greenhousesCount >= 0" class="statistics flex">
-          <temperature :id="greenhouse(index).id" />
-          <brightness :id="greenhouse(index).id" />
+          <temperature :id="greenhouses[index].id" />
+          <brightness :id="greenhouses[index].id" />
         </div>
       </div>
     </div>
@@ -70,6 +76,9 @@ export default {
       if (this.index + factor <= 0) this.index = this.greenhousesCount - 1;
       else if (this.index + factor >= this.greenhousesCount) this.index = 0;
       else this.index += factor;
+    },
+    toast(isSuccess, message) {
+      this.$emit("toast", isSuccess, message);
     },
     ...mapActions(["fetchGreenhouse"])
   },

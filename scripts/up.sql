@@ -1,3 +1,4 @@
+ALTER DATABASE gkeeper SET timezone TO 'Asia/bangkok';
 CREATE TABLE IF NOT EXISTS users(
   id SERIAL PRIMARY KEY,
   username VARCHAR(55) UNIQUE NOT NULL,

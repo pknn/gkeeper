@@ -115,13 +115,18 @@ export default {
   mounted() {
     this.fetchData();
   },
+  watch: {
+    id: function() {
+      this.fetchData();
+    }
+  },
   methods: {
     async track() {
       if (this.growth < 0) {
         this.growth = 0;
       } else {
         await axios
-          .post("/statistics", {
+          .post("/api/statistics", {
             type: "growth",
             value: this.growth,
             greenhouseID: this.id
@@ -134,7 +139,7 @@ export default {
     },
     fetchData() {
       axios
-        .get(`/statistics?id=${this.id}&type=growth&dt=daily`)
+        .get(`/api/statistics?id=${this.id}&type=growth&dt=daily`)
         .then(response => {
           const { data } = response;
 

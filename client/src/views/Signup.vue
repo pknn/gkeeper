@@ -135,7 +135,7 @@ export default {
     async checkUsername() {
       if (!this.username) return;
       try {
-        await axios.get(`/users?username=${this.username}`);
+        await axios.get(`/api/users?username=${this.username}`);
         this.isUsernameUnique = false;
       } catch (error) {
         this.isUsernameUnique = true;
@@ -144,7 +144,7 @@ export default {
     async checkEmail() {
       if (!this.email) return;
       try {
-        await axios.get(`/users?email=${this.email}`);
+        await axios.get(`/api/users?email=${this.email}`);
         this.isEmailUnique = false;
       } catch (error) {
         this.isEmailUnique = true;

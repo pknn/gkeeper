@@ -41,6 +41,11 @@ export default {
       this.loaded = true;
     });
   },
+  watch: {
+    plant: function() {
+      this.fetchData();
+    }
+  },
   methods: {
     async fetchData() {
       const {
@@ -49,9 +54,9 @@ export default {
         VUE_APP_PLANT_API_ENDPOINT
       } = process.env;
       const imageResponse = await axios.get(
-        `${VUE_APP_IMAGE_API_ENDPOINT}?key=${VUE_APP_IMAGE_API_KEY}&q=${this.plant}%20plant`
+        `${VUE_APP_IMAGE_API_ENDPOINT}?client_id=${VUE_APP_IMAGE_API_KEY}&query=${this.plant}`
       );
-      this.imageURL = imageResponse.data.hits[0].largeImageURL;
+      this.imageURL = imageResponse.data.results[0].urls.regular;
       const infoResponse = await axios.get(
         `${VUE_APP_PLANT_API_ENDPOINT}?term=${this.plant}`,
         {

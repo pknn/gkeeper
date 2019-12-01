@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white p-3 m-1 shadow-md w-1/2">
     <h1 class="uppercase text-app-main text-xl">Temperature</h1>
-    <h2>Temperature: {{ Math.round(currentTemp * 100) / 100 }}</h2>
+    <h2>Temperature: {{ Math.round(currentTemp * 100) / 100 || "No Data" }}</h2>
     <div class="tabs flex justify-center items-center">
       <div
         class="tab rounded-l"
@@ -101,12 +101,12 @@ export default {
     loaded: false
   }),
   mounted() {
-    axios
-      .get(`/statistics/latest?id=${this.id}&type=temperature`)
-      .then(response => {
-        this.currentTemp = response.data.value;
-      });
     this.fetchData();
+  },
+  watch: {
+    id: function() {
+      this.fetchData();
+    }
   },
   methods: {
     tabChange(index) {
@@ -115,8 +115,13 @@ export default {
     },
     fetchData() {
       axios
+        .get(`/api/statistics/latest?id=${this.id}&type=temperature`)
+        .then(response => {
+          this.currentTemp = response.data.value;
+        });
+      axios
         .get(
-          `/statistics?id=${this.id}&type=temperature&dt=${
+          `/api/statistics?id=${this.id}&type=temperature&dt=${
             this.interval[this.tab]
           }`
         )

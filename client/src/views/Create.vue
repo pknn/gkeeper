@@ -56,13 +56,13 @@ export default {
   name: "login",
   data: () => ({
     name: "",
-    plant: "",
-    ...mapGetters(["greenhouses"])
+    plant: ""
   }),
   computed: {
     isUnique() {
       return !this.greenhouses.find(v => v.name === this.name);
-    }
+    },
+    ...mapGetters(["greenhouses"])
   },
   methods: {
     async create() {
