@@ -29,7 +29,7 @@ export default {
   },
   getGreenhousesOf: async id => {
     const query = [
-      'SELECT * FROM users',
+      'SELECT greenhouses.id, name, plant FROM users',
       'JOIN greenhouses ON users.id=greenhouses.user_id',
       'WHERE users.id=$1'
     ].join(' ');

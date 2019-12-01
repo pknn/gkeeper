@@ -79,7 +79,6 @@
 </style>
 
 <script>
-import axios from "axios";
 export default {
   name: "login",
   data: () => ({
@@ -92,20 +91,23 @@ export default {
     toggleShowPassword() {
       this.isShowPassword = !this.isShowPassword;
     },
-    async signIn() {
+    signIn() {
       if (this.username && this.password) {
         this.isLoggingIn = true;
-        try {
-          await axios.post("/auth/login", {
+        this.$store
+          .dispatch("login", {
             username: this.username,
             password: this.password
+          })
+          .then(() => {
+            this.$router.push({ name: "dashboard" });
+          })
+          .catch(error => {
+            console.error(error);
+          })
+          .finally(() => {
+            this.isLoggingIn = false;
           });
-          this.$router.push({ name: "dashboard" });
-        } catch (error) {
-          console.error(error);
-        } finally {
-          this.isLoggingIn = false;
-        }
       }
     }
   }

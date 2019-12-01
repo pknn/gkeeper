@@ -30,7 +30,7 @@ export default {
         } else {
           const result = await bcrypt.compare(password, user.password_hash);
           if (result) {
-            response.sendStatus(200);
+            response.json(user);
           } else {
             response.sendStatus(403);
           }

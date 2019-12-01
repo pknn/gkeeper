@@ -153,19 +153,22 @@ export default {
     checkPassword() {
       this.isPasswordValid = this.password.length >= 8;
     },
-    async signUp() {
+    signUp() {
       if (this.valid) {
         this.signingUp = true;
-        try {
-          await axios.post("/auth/signup", {
+        this.$store
+          .dispatch("register", {
             username: this.username,
             email: this.email,
             password: this.password
+          })
+          .then(() => {
+            this.signingUp = false;
+            this.$router.push({ name: "login" });
+          })
+          .catch(error => {
+            console.error(error);
           });
-          console.log("Signed Up");
-        } catch (error) {
-          console.error(error);
-        }
       }
     }
   }

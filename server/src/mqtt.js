@@ -21,6 +21,7 @@ export default () => {
 
   client.on('message', (topic, payload) => {
     const [, username, greenhouseName, type] = topic.split(/\//);
+    console.log(username, greenhouseName, type);
     try {
       const value = parseFloat(payload.toString('utf-8'));
       statistics.create(username, greenhouseName, type, value);

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS greenhouses(
   plant VARCHAR(55) NOT NULL
 );
 
-CREATE TYPE statistic_type AS ENUM('temperature', 'brightness');
+CREATE TYPE statistic_type AS ENUM('temperature', 'brightness', 'growth', 'watering');
 
 CREATE TABLE IF NOT EXISTS statistics(
   id SERIAL PRIMARY KEY,
