@@ -7,7 +7,7 @@ import routes from './routes';
 
 dotenv.config();
 
-const { HOST = 'localhost', PORT = 8080, NODE_ENV } = process.env;
+const { HOST = 'localhost', PORT = 8081, NODE_ENV } = process.env;
 const app = express();
 
 app

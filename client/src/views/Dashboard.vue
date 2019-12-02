@@ -84,7 +84,9 @@ export default {
   },
   created() {
     this.fetchGreenhouse().then(() => {
-      this.$emit("loaded");
+      setTimeout(() => {
+        this.$emit("loaded");
+      }, 800);
     });
   }
 };

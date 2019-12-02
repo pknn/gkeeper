@@ -23,18 +23,20 @@
           alt="logo"
         />
       </div>
-      <button
-        @click="$router.push({ name: 'create' })"
-        class="px-8 py-2 bg-app-main rounded hover:bg-app-accent shadow-md"
-      >
-        New Greenhouse
-      </button>
-      <button
-        @click="logout"
-        class="px-8 py-2 text-red-400 rounded hover:text-red-600 outline-none"
-      >
-        Logout
-      </button>
+      <div class="absolute right-0">
+        <button
+          @click="$router.push({ name: 'create' })"
+          class="px-8 py-2 bg-app-main rounded hover:bg-app-accent shadow-md"
+        >
+          New Greenhouse
+        </button>
+        <button
+          @click="logout"
+          class="px-8 py-2 text-red-400 rounded hover:text-red-600 outline-none"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   </div>
 </template>
