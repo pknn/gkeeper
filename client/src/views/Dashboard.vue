@@ -73,9 +73,13 @@ export default {
   },
   methods: {
     change(factor) {
-      if (this.index + factor <= 0) this.index = this.greenhousesCount - 1;
-      else if (this.index + factor >= this.greenhousesCount) this.index = 0;
-      else this.index += factor;
+      if (this.index + factor < 0) {
+        this.index = this.greenhousesCount - 1;
+      } else if (this.index + factor >= this.greenhousesCount) {
+        this.index = 0;
+      } else {
+        this.index += factor;
+      }
     },
     toast(isSuccess, message) {
       this.$emit("toast", isSuccess, message);
