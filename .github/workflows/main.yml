@@ -46,8 +46,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - build-agent
-      - build-fetcher
+      - build-client
+      - build-server
     steps:
       - uses: actions/checkout@v1
       - name: SSH
