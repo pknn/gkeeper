@@ -6,6 +6,19 @@ export default {
     const { greenhouseID, type, value } = request.body;
     try {
       await repository.createByGreenhouseID(greenhouseID, type, value);
+      //get lastest temperature and brigthness then create growthrate
+      if (type === 'growth') {
+        const tempResult = await repository.getDaily(id, 'temperature')[0];
+        const brigthnessResult = await repository.getDaily(id, 'brightness')[0];
+        const data = await fetch(
+          `${WEATHER_API_CURRENT_ENDPOINT}?APPID=${WEATHER_API_KEY}&lat=${latitude}&lon=${longitude}&units=metric`
+        );
+        const weatherData = await data.json();
+        const lastHeight = await repository.getLatest(id, 'growth');
+        const diffHeight = value - lastHeight;
+
+        await repository.createGrowthrate(tempResult, brigthnessResult, weatherData, diffHeight);
+      }
       response.sendStatus(201);
     } catch (error) {
       response.status(400).send(error);

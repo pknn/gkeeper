@@ -24,3 +24,11 @@ CREATE TABLE IF NOT EXISTS statistics(
   value FLOAT NOT NULL
 );
 
+--Create table about growth rate of plant
+CREATE TABLE IF NOT EXISTS growthrate(
+  id SERIAL PRIMARY KEY,
+  temperature FLOAT NOT NULL,
+  brightness FLOAT NOT NULL,
+  weather FLOAT NOT NULL,
+  differenceHeight FLOAT NOT NULL
+);

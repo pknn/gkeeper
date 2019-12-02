@@ -23,6 +23,17 @@ export default {
       value
     ]);
   },
+  
+  // For insert values to the growthrate table
+  createGrowthrate: async (tempResult, brigthnessResult, weatherData, diffHeight) => {
+    await db.query('INSERT INTO growthrate(tempResult, brigthnessResult, weatherData, diffHeight) VALUES ($1, $2, $3, $4)', [
+      tempResult,
+      brigthnessResult,
+      weatherData,
+      diffHeight
+    ]);
+  },
+
   getMinutely: async (greenhouseID, type) => {
     const query = [
       'SELECT statistics.value as average_value, collected_at as dt',
