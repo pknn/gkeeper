@@ -30,10 +30,10 @@ export default {
       'WHERE greenhouse_id=$1',
       'AND type=$2',
       'ORDER BY collected_at DESC',
-      'LIMIT 10'
+      'LIMIT 20'
     ].join(' ');
     const result = await db.query(query, [greenhouseID, type]);
-    return result.rows;
+    return result.rows.reverse();
   },
   getHourly: async (greenhouseID, type) => {
     const query = [
@@ -42,10 +42,11 @@ export default {
       'WHERE greenhouse_id=$1',
       'AND type=$2',
       "GROUP BY date_trunc('hour', collected_at)",
-      'LIMIT 10'
+      "ORDER BY date_trunc('hour', collected_at) DESC",
+      'LIMIT 20'
     ].join(' ');
     const result = await db.query(query, [greenhouseID, type]);
-    return result.rows;
+    return result.rows.reverse();
   },
   getDaily: async (greenhouseID, type) => {
     const query = [
@@ -54,10 +55,11 @@ export default {
       'WHERE greenhouse_id=$1',
       'AND type=$2',
       "GROUP BY date_trunc('day', collected_at)",
-      'LIMIT 10'
+      "ORDER BY date_trunc('day', collected_at) DESC",
+      'LIMIT 20'
     ].join(' ');
     const result = await db.query(query, [greenhouseID, type]);
-    return result.rows;
+    return result.rows.reverse();
   },
   getLatest: async (greenhouseID, type) => {
     const result = await db.query(

@@ -25,6 +25,7 @@ export default {
         response.json(result);
       }
     } catch (error) {
+      console.log(error);
       response.status(400).send();
     }
   },
