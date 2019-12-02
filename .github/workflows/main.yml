@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-client:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Docker login
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+      - name: Build and Push Client
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          VUE_APP_IMAGE_API_KEY: ${{ secrets.VUE_APP_IMAGE_API_KEY }}
+          VUE_APP_IMAGE_API_ENDPOINT: ${{ secrets.VUE_APP_IMAGE_API_ENDPOINT }}
+          VUE_APP_PLANT_API_ENDPOINT: ${{ secrets.VUE_APP_PLANT_API_ENDPOINT }}
+        run: |
+          IMAGE_NAME=$DOCKER_USER/gkeeper_client:latest
+          docker build -t $IMAGE_NAME ./client
+          docker push $IMAGE_NAME
+  build-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Docker login
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+      - name: Build and Push Server
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        run: |
+          IMAGE_NAME=$DOCKER_USER/gkeeper_api:latest
+          docker build -t $IMAGE_NAME ./server
+          docker push $IMAGE_NAME
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build-agent
+      - build-fetcher
+    steps:
+      - uses: actions/checkout@v1
+      - name: SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d --force-recreate
