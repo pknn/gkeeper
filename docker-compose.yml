@@ -1,0 +1,29 @@
+version: "3"
+services:
+  client:
+    image: pknndev/gkeeper_client:latest
+    depends_on:
+      - postgres
+      - api
+    ports:
+      - "8080:80"
+    env_file:
+      - .env/client.env
+  postgres:
+    image: postgres:12.0-alpine
+    restart: always
+    env_file:
+      - .env/db.env
+    ports:
+      - "35432:5432"
+    volumes:
+      - ./scripts/up.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/var/lib/postgresql/data
+  api:
+    image: pknndev/gkeeper_api:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env/server.env
